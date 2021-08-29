@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -43,6 +44,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _selectImageFromGallery(BuildContext context) async {
+
+    var image = await  ImagePicker.platform.pickImage(
+        source: ImageSource.gallery, imageQuality: 50
+    );
+    
+    print((image?.path).toString());
+    List<File> files = [];
+    files.add(new File((image?.path).toString()));
+
+    Navigator.of(context).push(  MaterialPageRoute(  builder: (context) => DisplaySelectedFiles(files),),);
+
+     
+  
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +86,8 @@ class _HomePageState extends State<HomePage> {
             this._navigateToTakePhoto(context);
           } else if (index == 1) {
             this._selectDocsFromGallery(context);
+          } else if (index == 2) {
+            this._selectImageFromGallery(context);
           }
         },
         items: [
@@ -77,7 +96,9 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.camera_alt_rounded),
           ),
           BottomNavigationBarItem(
-              title: Text('Upload Docs!'), icon: Icon(Icons.folder_open_rounded))
+              title: Text('Upload Docs!'), icon: Icon(Icons.folder_open_rounded)),
+          BottomNavigationBarItem(
+              title: Text('Upload Image!'), icon: Icon(Icons.photo_album_rounded)),
         ],
       ),
     );
